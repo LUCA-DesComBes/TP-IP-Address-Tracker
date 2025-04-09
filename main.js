@@ -13,6 +13,8 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 	attribution: "&copy; OpenStreetMap contributors",
 }).addTo(map);
 
+let currentMarker = null;
+
 submitBtn.addEventListener("click", async () => {
 	const res = await fetch(
 		`https://geo.ipify.org/api/v2/country,city?apiKey=at_4gjLR0afIAWlS89FQwXQjCmuLl4QK&ipAddress=${apiAdress.value}`
@@ -25,6 +27,10 @@ submitBtn.addEventListener("click", async () => {
 	spanTimezone.textContent = data.location.timezone;
 	ipH2.textContent = data.ip;
 
-	L.marker([data.location.lat, data.location.lng]).addTo(map);
-	map.setView([data.location.lat, data.location.lng]);
+    if (currentMarker) {
+		map.removeLayer(currentMarker);
+	}
+
+	currentMarker = L.marker([data.location.lat, data.location.lng]).addTo(map);
+	map.setView([data.location.lat, data.location.lng], 13);
 });
